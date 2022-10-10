@@ -25,6 +25,8 @@ pip install -e .
 
 All RNG seeds are set in scripts and pretrained models provided so they should produce exact results.
 
+Requirements to run experiments can be found in 'requirements/requirements.txt', using Python 3.8.8.
+
 ### Regression Example
 
 Running the following Jupyter notebooks go through the synthetic regression example from scratch:
