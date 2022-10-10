@@ -1,4 +1,4 @@
-# [Synthetic Model Combination: An Instance-wise Approach to Unsupervised Ensemble Learning (NeurIPS 2022) by Alex J. Chan and Mihaela van der Schaar.](https://openreview.net/forum?id=RgWjps_LdkJ)
+# [Synthetic Model Combination: An Instance-wise Approach to Unsupervised Ensemble Learning](https://openreview.net/forum?id=RgWjps_LdkJ)
 
 ### Alex J. Chan and Mihaela van der Schaar
 
@@ -36,7 +36,7 @@ Running the following Jupyter notebooks go through the synthetic regression exam
 
 ### MNIST
 
-To produce Figure 5, run
+To produce Figure 5, run:
 
 ```shell
 python smc/experiments/MNIST_pred_results.py
