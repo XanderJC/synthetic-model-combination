@@ -2,7 +2,7 @@
 
 ### Alex J. Chan and Mihaela van der Schaar
 
-### Neural Information Processing Systems (NeurIPS) 2022
+### Advances in Neural Information Processing Systems (NeurIPS) 2022
 
  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
  <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
@@ -67,7 +67,7 @@ If you use this software please cite as follows:
 @inproceedings{chan2022synthetic,
     title={Synthetic Model Combination: An Instance-wise Approach to Unsupervised Ensemble Learning},
     author={Alex James Chan and Mihaela van der Schaar},
-    booktitle={Neural Information Processing Systems},
+    booktitle={Advances in Neural Information Processing Systems},
     year={2022},
     url={https://openreview.net/forum?id=RgWjps_LdkJ}
 }
