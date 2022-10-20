@@ -4,12 +4,16 @@ import time
 import torch
 from pkg_resources import resource_filename
 
+from smc import DEVICE
+
 
 class BaseModel(torch.nn.Module):  # pylint: disable=abstract-method
     def __init__(self):
         super(BaseModel, self).__init__()
 
         self.name = "Base"
+
+        self.to(DEVICE)
 
     def fit(
         self,
@@ -31,6 +35,8 @@ class BaseModel(torch.nn.Module):  # pylint: disable=abstract-method
             running_loss = 0
             start = time.time()
             for i, batch in enumerate(data_loader):
+
+                batch = [b.to(DEVICE) for b in batch]
 
                 optimizer.zero_grad()
                 loss = self.loss(batch)  # type: ignore

@@ -3,6 +3,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from smc import DEVICE
+
 from .base_model import BaseModel
 from .mnist_classifier import MNIST_Net
 
@@ -16,6 +18,8 @@ class RepLearner(BaseModel):
         self.x_dim = x_dim
 
         self.predictors = [None]
+
+        self.to(DEVICE)
 
     def encoder(self):
         return
@@ -65,6 +69,7 @@ class RepLearner(BaseModel):
         data_recon, mu, log_var = self.forward(data)
 
         model_dataset = self.sample_model_dataset()
+        model_dataset = model_dataset.to(DEVICE)  # type: ignore
 
         _, latent_models, _ = self.forward(model_dataset)
         pairwise_distances = torch.cdist(latent_models, latent_models)
@@ -95,7 +100,9 @@ class MNISTRepLearner(RepLearner):
         self.fc5 = nn.Linear(256, 512)
         self.fc6 = nn.Linear(512, 784)
 
-        self.predictors = [MNIST_Net(load=str(digit)) for digit in range(10)]
+        self.predictors = [MNIST_Net(load=str(digit) + "_new") for digit in range(10)]
+
+        self.to(DEVICE)
 
     def encoder(self, x):  # pylint: disable=arguments-differ
         h = F.relu(self.fc1(x))
@@ -128,6 +135,7 @@ class MNISTRepLearner(RepLearner):
         return -0.5 * pairwise_distances.mean()
 
     def con_loss(self, model_dataset_predictions, pairwise_distances):
+        model_dataset_predictions = model_dataset_predictions.to(DEVICE)
 
         # model_dataset_predictions [10,10,10]
         # pairwise_distances [10,10]

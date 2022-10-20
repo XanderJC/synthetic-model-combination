@@ -23,6 +23,8 @@ class MNIST_Net(BaseModel):
         if load is not None:
             self.load_model(name=load)
 
+        self.to(DEVICE)
+
     def forward(self, x):
 
         x = F.relu(F.max_pool2d(self.conv1(x), 2))

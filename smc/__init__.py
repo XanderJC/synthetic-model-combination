@@ -8,9 +8,9 @@ try:
 except Exception:  # pylint: disable=broad-except
     DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-if DEVICE == "mps":
+if "mps" in DEVICE.type:  # type: ignore
     print("Using Apple Silicon GPU")
-elif DEVICE == "cuda:0":
+elif "cuda" in DEVICE.type:  # type: ignore
     print("Using NVIDIA GPU")
 else:
     print("No GPU detected -> Using CPU")
