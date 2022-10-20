@@ -1,8 +1,10 @@
-from .base_model import BaseModel
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import torch
+
 from smc import DEVICE
+
+from .base_model import BaseModel
 
 
 class MNIST_Net(BaseModel):
@@ -16,7 +18,7 @@ class MNIST_Net(BaseModel):
         self.fc1 = nn.Linear(320, 50)
         self.fc2 = nn.Linear(50, 10)
 
-        self.average_input = nn.Parameter(torch.randn(28, 28))
+        self.average_input = nn.Parameter(torch.randn(28, 28))  # type: ignore
 
         if load is not None:
             self.load_model(name=load)
@@ -33,7 +35,7 @@ class MNIST_Net(BaseModel):
 
     def loss(self, batch):
 
-        input, target = batch
+        input, target = batch  # pylint: disable=redefined-builtin
         output = self.forward(input.to(DEVICE))
         return F.nll_loss(output, target.to(DEVICE))
 
@@ -44,6 +46,6 @@ class MNIST_Net(BaseModel):
 
     def validation(self, batch):
 
-        input, target = batch
+        input, target = batch  # pylint: disable=redefined-builtin
         output = self.forward(input)
         return {"nll": F.nll_loss(output, target)}

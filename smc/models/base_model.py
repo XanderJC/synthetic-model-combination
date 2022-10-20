@@ -1,10 +1,11 @@
-import torch
-import time
 import datetime
+import time
+
+import torch
 from pkg_resources import resource_filename
 
 
-class BaseModel(torch.nn.Module):
+class BaseModel(torch.nn.Module):  # pylint: disable=abstract-method
     def __init__(self):
         super(BaseModel, self).__init__()
 
@@ -18,7 +19,7 @@ class BaseModel(torch.nn.Module):
         learning_rate=1e-3,
         validation_set=None,
     ):
-        data_loader = torch.utils.data.DataLoader(
+        data_loader = torch.utils.data.DataLoader(  # type: ignore
             dataset, batch_size=batch_size, shuffle=True, drop_last=True
         )
         optimizer = torch.optim.Adam(
@@ -32,13 +33,19 @@ class BaseModel(torch.nn.Module):
             for i, batch in enumerate(data_loader):
 
                 optimizer.zero_grad()
-                loss = self.loss(batch)
+                loss = self.loss(batch)  # type: ignore
                 loss.backward()
                 optimizer.step()
 
                 running_loss += loss
             end = time.time()
-            average_loss = round((running_loss.cpu().detach().numpy() / (i + 1)), 5)
+            average_loss = round(
+                (
+                    running_loss.cpu().detach().numpy()  # type: ignore
+                    / (i + 1)  # type: ignore  # pylint: disable=undefined-loop-variable
+                ),
+                5,
+            )
             print(
                 f"Epoch {epoch+1} average loss: {average_loss}"
                 + f" ({round(end-start,2)} seconds)"
@@ -46,7 +53,7 @@ class BaseModel(torch.nn.Module):
 
             if validation_set is not None:
                 self.eval()
-                metrics = self.validation(validation_set)
+                metrics = self.validation(validation_set)  # type: ignore
                 for metric in metrics.keys():
                     met = round(float(metrics[metric]), 5)
                     print(f"Epoch {epoch+1} {metric}: {met}")

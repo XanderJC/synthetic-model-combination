@@ -1,10 +1,10 @@
-from .base_model import BaseModel
-from .mnist_classifier import MNIST_Net
-
+import numpy as np
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import torch
-import numpy as np
+
+from .base_model import BaseModel
+from .mnist_classifier import MNIST_Net
 
 
 class RepLearner(BaseModel):
@@ -24,9 +24,9 @@ class RepLearner(BaseModel):
         return
 
     def forward(self, x):
-        mu, log_var = self.encoder(x.view(-1, self.x_dim))
+        mu, log_var = self.encoder(x.view(-1, self.x_dim))  # type: ignore  # pylint: disable=E
         z = self.sample(mu, log_var)
-        return self.decoder(z), mu, log_var
+        return self.decoder(z), mu, log_var  # type: ignore  # pylint: disable=too-many-function-args
 
     def sample(self, mu, log_var):
         std = torch.exp(0.5 * log_var)
@@ -36,7 +36,7 @@ class RepLearner(BaseModel):
     def sample_model_dataset(self):
 
         for predictor in self.predictors:
-            sample = predictor.sample()
+            sample = predictor.sample()  # type: ignore  # pylint: disable=unused-variable  # noqa
 
         model_dataset = None
 
@@ -50,14 +50,18 @@ class RepLearner(BaseModel):
     def kl_loss(self, mu, log_var):
         return -0.5 * torch.sum(1 + log_var - mu.pow(2) - log_var.exp())
 
-    def sep_loss(self, model_dataset, pairwise_distances):
+    def sep_loss(
+        self, model_dataset, pairwise_distances
+    ):  # pylint: disable=unused-argument
         return
 
-    def con_loss(self, model_dataset_predictions, pairwise_distances):
+    def con_loss(
+        self, model_dataset_predictions, pairwise_distances
+    ):  # pylint: disable=unused-argument
         return
 
     def loss(self, batch):
-        data, targets = batch
+        data, targets = batch  # pylint: disable=unused-variable
         data_recon, mu, log_var = self.forward(data)
 
         model_dataset = self.sample_model_dataset()
@@ -65,13 +69,13 @@ class RepLearner(BaseModel):
         _, latent_models, _ = self.forward(model_dataset)
         pairwise_distances = torch.cdist(latent_models, latent_models)
 
-        model_dataset_predictions = self.get_model_predictions(model_dataset)
+        model_dataset_predictions = self.get_model_predictions(model_dataset)  # type: ignore
 
         return (
             self.rec_loss(data, data_recon)
             + 1.0 * self.kl_loss(mu, log_var)
-            + 0.1 * self.sep_loss(model_dataset, pairwise_distances)
-            + 0.01 * self.con_loss(model_dataset_predictions, pairwise_distances)
+            + 0.1 * self.sep_loss(model_dataset, pairwise_distances)  # type: ignore
+            + 0.01 * self.con_loss(model_dataset_predictions, pairwise_distances)  # type: ignore
         )
 
 
@@ -93,12 +97,12 @@ class MNISTRepLearner(RepLearner):
 
         self.predictors = [MNIST_Net(load=str(digit)) for digit in range(10)]
 
-    def encoder(self, x):
+    def encoder(self, x):  # pylint: disable=arguments-differ
         h = F.relu(self.fc1(x))
         h = F.relu(self.fc2(h))
         return self.fc31(h), self.fc32(h)  # mu, log_var
 
-    def decoder(self, z):
+    def decoder(self, z):  # pylint: disable=arguments-differ
         h = F.relu(self.fc4(z))
         h = F.relu(self.fc5(h))
         return torch.sigmoid(self.fc6(h))

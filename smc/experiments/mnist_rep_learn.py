@@ -1,10 +1,10 @@
-from smc.models import MNIST_Net, MNISTRepLearner
-import matplotlib.pyplot as plt
-from torchvision.datasets import MNIST
-from torchvision import transforms
-import torch
 import numpy as np
+import torch
 from pkg_resources import resource_filename
+from torchvision import transforms
+from torchvision.datasets import MNIST
+
+from smc.models import MNISTRepLearner
 
 np.random.seed(41310)
 torch.manual_seed(41310)

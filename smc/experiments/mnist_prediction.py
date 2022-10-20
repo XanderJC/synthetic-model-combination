@@ -1,14 +1,12 @@
-from smc.models import MNIST_Net, MNISTRepLearner
-import matplotlib.pyplot as plt
-from torchvision.datasets import MNIST
-from torchvision import transforms
+import numpy as np
 import torch
 from pkg_resources import resource_filename
-import seaborn as sns
-import numpy as np
-import pandas as pd
 from scipy.stats import gaussian_kde
-from sklearn.metrics import accuracy_score, roc_auc_score, average_precision_score
+from sklearn.metrics import roc_auc_score
+from torchvision import transforms
+from torchvision.datasets import MNIST
+
+from smc.models import MNIST_Net, MNISTRepLearner
 
 torch.manual_seed(41310)
 np.random.seed(41310)
@@ -33,7 +31,7 @@ test_transform_dataset = MNIST(
     download=True,
     train=False,
 )
-data_loader = torch.utils.data.DataLoader(
+data_loader = torch.utils.data.DataLoader(  # type: ignore
     test_transform_dataset, batch_size=10000, shuffle=True
 )
 

@@ -1,11 +1,11 @@
 import torch
 
 try:
-    if torch.backends.mps.is_available() & torch.backends.mps.is_built():
+    if torch.backends.mps.is_available() & torch.backends.mps.is_built():  # type: ignore
         DEVICE = "mps"
     else:
         DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-except Exception:
+except Exception:  # pylint: disable=broad-except
     DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 if DEVICE == "mps":

@@ -1,7 +1,6 @@
-from matplotlib.markers import MarkerStyle
-import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 from pkg_resources import resource_filename
 
 matplotlib.rcParams["pdf.fonttype"] = 42
@@ -36,18 +35,18 @@ CB91_Amber = "#F5B14C"
 fig, ax = plt.subplots()
 
 ax.plot(n_samples, means, color=CB91_Amber, linestyle="--", label="SMC")
-ax.scatter(n_samples, means, color=CB91_Amber, marker="x")
+ax.scatter(n_samples, means, color=CB91_Amber, marker="x")  # type: ignore
 ax.fill_between(
     n_samples,
-    means - 2 * stds,
-    means + 2 * stds,
+    means - 2 * stds,  # type: ignore
+    means + 2 * stds,  # type: ignore
     alpha=0.2,
     color=CB91_Amber,
 )
 
 ax.set_xscale("log")
-ax.set_ylim([0.45, 1])
-ax.set_xlim([1, 5000])
+ax.set_ylim([0.45, 1])  # type: ignore
+ax.set_xlim([1, 5000])  # type: ignore
 ax.set_xticks([10, 100, 1000])
 ax.set_xlabel("Num. of Samples (log scale)")
 ax.set_ylabel("AUROC")

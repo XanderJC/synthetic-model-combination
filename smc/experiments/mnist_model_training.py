@@ -1,9 +1,9 @@
-from torchvision.datasets import MNIST
-from torchvision import transforms
+import numpy as np
+import torch
 import torch.nn as nn
 from pkg_resources import resource_filename
-import torch
-import numpy as np
+from torchvision import transforms
+from torchvision.datasets import MNIST
 
 from smc.models import MNIST_Net
 
@@ -35,5 +35,5 @@ for digit in range(10):
     model = MNIST_Net()
 
     model.fit(dataset, epochs=10)
-    model.average_input = nn.Parameter(dataset.data.float().mean(0))
+    model.average_input = nn.Parameter(dataset.data.float().mean(0))  # type: ignore
     model.save_model(name=(str(digit) + "_new"))
