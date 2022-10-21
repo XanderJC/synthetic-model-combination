@@ -43,8 +43,11 @@ To produce Figure 5, run:
 ```shell
 python smc/experiments/MNIST_pred_results.py
 ```
+Which uses results generated from:
 
-This script loads pretrained models for both the ensemble members and the SMC representation which can themselves be trained with the following scripts respectively:
+- smc/experiments/mnist_prediction.py
+
+This script loads results and pretrained models for both the ensemble members and the SMC representation which can themselves be trained with the following scripts respectively:
 
 - smc/experiments/mnist_model_training.py
 - smc/experiments/mnist_rep_learn.py
