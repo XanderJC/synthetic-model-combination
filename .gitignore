@@ -99,3 +99,4 @@ io/
 *.csv
 
 !vancomycin_processed_new.npy
+!MNIST_pred_results_CR.npy
