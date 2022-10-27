@@ -6,6 +6,7 @@ from sklearn.metrics import roc_auc_score
 from torchvision import transforms
 from torchvision.datasets import MNIST
 
+from smc import DEVICE
 from smc.models import MNIST_Net, MNISTRepLearner
 
 torch.manual_seed(41310)
@@ -35,7 +36,7 @@ data_loader = torch.utils.data.DataLoader(  # type: ignore
     test_transform_dataset, batch_size=10000, shuffle=True
 )
 
-t_data = list(data_loader)[0][0]
+t_data = list(data_loader)[0][0].to(DEVICE)
 
 predictors = [MNIST_Net(load=(str(digit) + "_new")) for digit in range(10)]
 
@@ -51,7 +52,7 @@ for i, predictor in enumerate(predictors):
 
     pred = predictor.forward(t_data)
 
-    preds[:, i, :] = np.exp(pred.detach())
+    preds[:, i, :] = np.exp(pred.detach().cpu())
     preds[:, i, :] /= preds[:, i, :].sum(axis=1).reshape((10000, 1))
 
 
@@ -71,20 +72,20 @@ for i, num in enumerate(n_samples):
             dataset.data = dataset.data[idx]
             dataset.targets = dataset.targets[idx]
 
-            _, latents, _ = model.forward(dataset.data.float())
+            _, latents, _ = model.forward(dataset.data.float().to(DEVICE))
 
-            latents = latents.detach().numpy()
+            latents = latents.detach().cpu().numpy()
             latents = latents[np.random.choice(latents.shape[0], num, replace=False), :]
             kernel = gaussian_kde(latents.T)
             kdes.append(kernel)
 
-        _, test_latents, _ = model.forward(test_dataset.data.float())
+        _, test_latents, _ = model.forward(test_dataset.data.float().to(DEVICE))
 
         weights = np.zeros((10000, 10))
 
         for digit, (predictor, kernel) in enumerate(zip(predictors, kdes)):
 
-            density = kernel(test_latents.detach().T)
+            density = kernel(test_latents.detach().cpu().T)
             weights[:, digit] = density
 
         weights = weights / weights.sum(axis=1).reshape(-1, 1)
