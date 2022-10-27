@@ -62,5 +62,5 @@ ax.legend(loc="center right")
 
 plt.grid(ls="--", which="both", alpha=0.5)
 plt.tight_layout()
-plt.savefig("MNIST_pred.pdf")
+plt.savefig(RESULTS_LOC + "MNIST_pred.pdf")
 plt.show()

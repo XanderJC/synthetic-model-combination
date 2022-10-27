@@ -13,6 +13,7 @@ torch.manual_seed(41310)
 np.random.seed(41310)
 
 DATA_LOC = resource_filename("smc", "data_loading")
+RESULTS_LOC = resource_filename("smc", "results/")
 
 model = MNISTRepLearner()
 model.load_model(name="test_CR")
@@ -100,4 +101,4 @@ for i, num in enumerate(n_samples):
         print(f"{num} samples, rep {rep}, AUC: {auc}")
         aucs[i, rep] = auc
 
-np.save("MNIST_pred_results_CR.npy", aucs)
+np.save(RESULTS_LOC + "MNIST_pred_results_CR.npy", aucs)
