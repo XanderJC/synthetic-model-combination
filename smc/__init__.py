@@ -1,16 +1,16 @@
 import torch
 
 try:
-    if torch.backends.mps.is_available() & torch.backends.mps.is_built():
+    if torch.backends.mps.is_available() & torch.backends.mps.is_built():  # type: ignore
         DEVICE = "mps"
     else:
         DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-except Exception:
+except Exception:  # pylint: disable=broad-except
     DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-if DEVICE == "mps":
+if "mps" in DEVICE.type:  # type: ignore
     print("Using Apple Silicon GPU")
-elif DEVICE == "cuda:0":
+elif "cuda" in DEVICE.type:  # type: ignore
     print("Using NVIDIA GPU")
 else:
     print("No GPU detected -> Using CPU")

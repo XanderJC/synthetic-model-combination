@@ -1,16 +1,11 @@
-from smc.models import MNIST_Net, MNISTRepLearner
-import matplotlib.pyplot as plt
-from torchvision.datasets import MNIST
-from torchvision import transforms
-import torch
-from pkg_resources import resource_filename
-import seaborn as sns
 import numpy as np
-import pandas as pd
-from scipy.stats import gaussian_kde
-from sklearn.metrics import accuracy_score, roc_auc_score, average_precision_score
+from pkg_resources import resource_filename
+from sklearn.metrics import roc_auc_score
 from sklearn.neighbors import KernelDensity
+from torchvision import transforms
+from torchvision.datasets import MNIST
 
+from smc.models import MNIST_Net, MNISTRepLearner
 
 DATA_LOC = resource_filename("smc", "data_loading")
 

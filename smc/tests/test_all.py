@@ -1,8 +1,6 @@
 import unittest
 
-from src.tests import test_data
-from src.tests import test_preprocessing
-from src.tests import test_models
+from smc.tests import test_data, test_models, test_preprocessing
 
 suites = []
 suites.append(test_data.suite)

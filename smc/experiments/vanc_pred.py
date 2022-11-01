@@ -1,10 +1,12 @@
-from smc.models import SMC_Vancomycin
-import numpy as np
-from tqdm.notebook import tqdm
-from pkg_resources import resource_filename
-import torch
 import argparse
 import csv
+
+import numpy as np
+import torch
+from pkg_resources import resource_filename
+from tqdm.notebook import tqdm
+
+from smc.models import SMC_Vancomycin
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--no-subsample", dest="subsample", action="store_false")
@@ -122,7 +124,7 @@ header = [
     "SMC+PBMA",
 ]
 
-with open(RESULTS_LOC, "w") as f:
+with open(RESULTS_LOC, "w") as f:  # pylint: disable=unspecified-encoding
     writer = csv.writer(f)
     writer.writerow(header[:15] + header[17:19])
 
@@ -133,7 +135,11 @@ with open(RESULTS_LOC, "w") as f:
         stds = rss_matrix.std(axis=1)
         result = [scene]
         for i in range(10):
-            print(f"$${(means[i]*100).round(1)} \pm {(stds[i]*100).round(1)}$$")
+            print(
+                f"$${(means[i]*100).round(1)}"
+                "\pm"  # type: ignore  # noqa  # pylint: disable=anomalous-backslash-in-string
+                f"{(stds[i]*100).round(1)}$$"
+            )
             result.append((means[i] * 100).round(1))
             result.append((stds[i] * 100).round(1))
         writer.writerow(result[:15] + result[17:19])

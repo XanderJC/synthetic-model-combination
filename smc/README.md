@@ -10,8 +10,12 @@ src
 ├── constants.py   <- Includes project wide constants for easy imports
 │
 ├── data_loading   <- Scripts to download or generate data
+│
+├── experiments    <- Scripts to run the paper experiments
 |
 ├── preprocessing  <- Scripts to turn raw data into clean data and features for modeling
+|
+├── results        <- Experiment results go here
 │
 ├── models         <- Scripts to train models and then use trained models to make
 │                     predictions

@@ -31,9 +31,9 @@ Requirements to run experiments can be found in 'requirements/requirements.txt',
 
 Running the following Jupyter notebooks go through the synthetic regression example from scratch:
 
-- smc/experiments/example.ipynb
-- smc/experiments/example_uncertainty.ipynb
-- smc/experiments/example_high_overlap.ipynb
+- [`smc/experiments/example.ipynb`](./smc/experiments/example.ipynb)
+- [`smc/experiments/example_uncertainty.ipynb`](./smc/experiments/example_uncertainty.ipynb)
+- [`smc/experiments/example_high_overlap.ipynb`](./smc/experiments/example_high_overlap.ipynb)
 
 
 ### MNIST
@@ -45,12 +45,12 @@ python smc/experiments/MNIST_pred_results.py
 ```
 Which uses results generated from:
 
-- smc/experiments/mnist_prediction.py
+- `python smc/experiments/mnist_prediction.py`
 
 This script loads results and pretrained models for both the ensemble members and the SMC representation which can themselves be trained with the following scripts respectively:
 
-- smc/experiments/mnist_model_training.py
-- smc/experiments/mnist_rep_learn.py
+- `python smc/experiments/mnist_model_training.py`
+- `python smc/experiments/mnist_rep_learn.py`
 
 ### Vancomycin
 

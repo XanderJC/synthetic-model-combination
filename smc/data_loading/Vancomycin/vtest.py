@@ -1,5 +1,4 @@
 import pandas as pd
-
 from pkg_resources import resource_filename
 
 DATA_LOC = resource_filename("smc", "data_loading")

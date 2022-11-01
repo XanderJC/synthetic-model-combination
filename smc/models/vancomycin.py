@@ -1,10 +1,12 @@
+import time
+
 import numpy as np
-from smc.models import BaseModel
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import time
-from scipy.stats import multivariate_normal, gaussian_kde
+from scipy.stats import gaussian_kde, multivariate_normal
+
+from smc.models import BaseModel
 
 
 class RepLearner(BaseModel):
@@ -24,9 +26,9 @@ class RepLearner(BaseModel):
         return
 
     def forward(self, x):
-        mu, log_var = self.encoder(x.view(-1, self.x_dim))
+        mu, log_var = self.encoder(x.view(-1, self.x_dim))  # type: ignore  # pylint: disable=E
         z = self.sample(mu, log_var)
-        return self.decoder(z), mu, log_var
+        return self.decoder(z), mu, log_var  # type: ignore  # pylint: disable=too-many-function-args
 
     def sample(self, mu, log_var):
         std = torch.exp(0.5 * log_var)
@@ -36,7 +38,7 @@ class RepLearner(BaseModel):
     def sample_model_dataset(self):
 
         for predictor in self.predictors:
-            sample = predictor.sample()
+            sample = predictor.sample()  # type: ignore  # pylint: disable=unused-variable  # noqa
 
         model_dataset = None
 
@@ -50,14 +52,18 @@ class RepLearner(BaseModel):
     def kl_loss(self, mu, log_var):
         return -0.5 * torch.sum(1 + log_var - mu.pow(2) - log_var.exp())
 
-    def sep_loss(self, model_dataset, pairwise_distances):
+    def sep_loss(
+        self, model_dataset, pairwise_distances
+    ):  # pylint: disable=unused-argument
         return
 
-    def con_loss(self, model_dataset, pairwise_distances):
+    def con_loss(
+        self, model_dataset, pairwise_distances
+    ):  # pylint: disable=unused-argument
         return
 
     def loss(self, batch):
-        data, targets = batch
+        data, targets = batch  # pylint: disable=unused-variable
         data_recon, mu, log_var = self.forward(data)
 
         model_dataset = self.sample_model_dataset()
@@ -68,7 +74,7 @@ class RepLearner(BaseModel):
         return (
             self.rec_loss(data, data_recon)
             + 1.0 * self.kl_loss(mu, log_var)
-            + 0.1 * self.sep_loss(model_dataset, pairwise_distances)
+            + 0.1 * self.sep_loss(model_dataset, pairwise_distances)  # type: ignore
             + self.con_loss(model_dataset, pairwise_distances)
         )
 
@@ -93,11 +99,11 @@ class VancRepLearner(RepLearner):
         self.list_densities = list_densities
         self.mask = mask
 
-    def encoder(self, x):
+    def encoder(self, x):  # pylint: disable=arguments-differ
         h = torch.sigmoid(self.fc1(x))
         return self.fc31(h), self.fc32(h)  # mu, log_var
 
-    def decoder(self, z):
+    def decoder(self, z):  # pylint: disable=arguments-differ
         h = torch.sigmoid(self.fc4(z))
         return self.fc5(h)
 
@@ -116,10 +122,12 @@ class VancRepLearner(RepLearner):
     def sep_loss(self, model_dataset, pairwise_distances):
         return -0.5 * pairwise_distances.mean()
 
-    def con_loss(self, *args):
+    def con_loss(self, *args):  # pylint: disable=unused-argument
         return 0.0
 
-    def loss(self, rho_rec=1.0, rho_kl=1.0, rho_sep=0.0, rho_con=0.0):
+    def loss(
+        self, rho_rec=1.0, rho_kl=1.0, rho_sep=0.0, rho_con=0.0
+    ):  # pylint: disable=arguments-renamed
 
         data_recon, mu, log_var = self.forward(self.covariates[:, 0, :4])
 
@@ -135,7 +143,9 @@ class VancRepLearner(RepLearner):
             + rho_con * self.con_loss(model_dataset, pairwise_distances)
         )
 
-    def fit(self, epochs=10, learning_rate=1e-3, quiet=False):
+    def fit(
+        self, epochs=10, learning_rate=1e-3, quiet=False
+    ):  # pylint: disable=arguments-differ
 
         optimizer = torch.optim.Adam(
             self.parameters(), lr=learning_rate, betas=(0.9, 0.9)
@@ -179,7 +189,7 @@ class vanc_density:
         self.scr_sd = scr_sd
 
         self.density = multivariate_normal(
-            mean=[tbw_m, bmi_m, age_m, scr_m], cov=[tbw_sd, bmi_sd, age_sd, scr_sd]
+            mean=[tbw_m, bmi_m, age_m, scr_m], cov=[tbw_sd, bmi_sd, age_sd, scr_sd]  # type: ignore
         )
 
     def pdf(self, X):
@@ -225,7 +235,7 @@ class SMC_Vancomycin:
         self.rep_learner.fit(epochs, learning_rate, quiet)
 
     def remodel_in_z(self, n_samples=1000):
-        self.kdes = []
+        self.kdes = []  # pylint: disable=attribute-defined-outside-init
         for density in self.list_densities:
             samples = torch.tensor(density.sample(n_samples))
             _, latents, _ = self.rep_learner.forward(samples.float())
@@ -270,12 +280,12 @@ class SMC_Vancomycin:
         return weights / weights.sum(axis=1).reshape((N, 1))
 
     def get_weights(self, X):
-        if self.rep_flag == True:
+        if self.rep_flag == True:  # noqa
             return self.get_weights_in_z(X)
         else:
             return self.get_weights_no_rep(X)
 
-    def pred(self, X, epsilon=1e-10):
+    def pred(self, X, epsilon=1e-10):  # pylint: disable=unused-argument
 
         weights = self.get_weights(X)
         # weights += epsilon
@@ -284,7 +294,9 @@ class SMC_Vancomycin:
 
         return predictions
 
-    def pred_combo(self, X, quality_info, epsilon=1e-10):
+    def pred_combo(
+        self, X, quality_info, epsilon=1e-10
+    ):  # pylint: disable=unused-argument
 
         smc_weights = self.get_weights(X)
         # smc_weights += epsilon

@@ -98,5 +98,8 @@ io/
 *.npy
 *.csv
 
+# Custom
 !vancomycin_processed_new.npy
 !MNIST_pred_results_CR.npy
+*.BAK/
+log*.txt
